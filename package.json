@@ -1,0 +1,25 @@
+{
+  "name": "formation_nodejs",
+  "version": "1.0.0",
+  "description": "API Rest de gestion de Pockemon pour des clients",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://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@github.com/zlancanto/formation_NodeJS.git"
+  },
+  "author": "Zlanca-Nto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zlancanto/formation_NodeJS/issues"
+  },
+  "homepage": "https://github.com/zlancanto/formation_NodeJS#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
