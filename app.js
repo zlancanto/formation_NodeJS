@@ -4,12 +4,32 @@ let pokemons = require('./mock-pokemon');
 const morgan = require("morgan");
 const favicon = require("serve-favicon");
 const bodyParser = require("body-parser");
+const {Sequelize} = require("sequelize");
 
 console.log(Array.isArray(pokemons)); // Devrait afficher true
 console.log(typeof pokemons); // Devrait afficher 'object'
 
 const app = express();
 const port = 3000;
+
+const sequelize = new Sequelize(
+    'pokedex',
+    'root',
+    '',
+    {
+        host: 'localhost',
+        dialect: 'mariadb',
+        dialectOptions: {
+            timezone: 'Etc/GMT-2',
+        },
+        logging: false,
+    }
+);
+
+sequelize
+    .authenticate()
+    .then(_ => console.log("Connexion à la BD établie"))
+    .catch(err => console.error(`Impossible de se connecter la BD : ${err}`));
 
 app
     .use(favicon(__dirname + '/favicon.ico'))
@@ -50,6 +70,7 @@ app.put('/api/pokemons/:id', (req, res) => {
     res.json(success(message, pokemonUpdate));
 })
 
+// N'est pas du tout recommandé
 app.patch('/api/pokemons/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const pokemonUpdated = {id: id, ...req.body}
