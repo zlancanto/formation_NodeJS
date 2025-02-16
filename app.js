@@ -17,37 +17,53 @@ app
     .use(bodyParser.json())
 ;
 
-    app.get('/', (req, res) => res.send('Hello Express !'));
-    app.get('/api/pokemons', (req, res) => {
-        const message = "Liste de pokémons récuprérée avec succès";
-        res.json(allSuccess(message, pokemons.length, pokemons));
-    });
-    app.get('/api/pokemons/:id', (req, res) => {
-        const id = parseInt(req.params.id);
-        const pokemon = pokemons.find(pokemon => pokemon.id === id);
-        const message = "Un pokémon a bien été trouvé";
-        res.json(success(message, pokemon));
-    });
+app.get('/', (req, res) => res.send('Hello Express !'));
+app.get('/api/pokemons', (req, res) => {
+    const message = "Liste de pokémons récuprérée avec succès";
+    res.json(allSuccess(message, pokemons.length, pokemons));
+});
+app.get('/api/pokemons/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const pokemon = pokemons.find(pokemon => pokemon.id === id);
+    const message = "Un pokémon a bien été trouvé";
+    res.json(success(message, pokemon));
+});
 
-    app.post('/api/pokemons', (req, res) => {
-        const id = getUniqueId(pokemons);
-        const pokemonCreated = {
-            ...req.body,
-            ...{id: id, created: new Date()}
-        };
-        pokemons.push(pokemonCreated);
-        const message = `Le pokémon ${pokemonCreated.name} a bien été créé`;
-        res.json(success(message, pokemonCreated));
-    })
+app.post('/api/pokemons', (req, res) => {
+    const id = getUniqueId(pokemons);
+    const pokemonCreated = {
+        ...req.body,
+        ...{id: id, created: new Date()}
+    };
+    pokemons.push(pokemonCreated);
+    const message = `Le pokémon ${pokemonCreated.name} a bien été créé`;
+    res.json(success(message, pokemonCreated));
+})
 
 app.put('/api/pokemons/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const pokemonUpdate = {id: id, ...req.body}
     pokemons = pokemons.map(pokemon => {
-       return pokemon.id === id ? pokemonUpdate : pokemon;
+        return pokemon.id === id ? pokemonUpdate : pokemon;
     });
-    const message = `Le pokémon ${pokemonUpdate.id} a bien été mis à jour`;
+    const message = `Le pokémon ${pokemonUpdate.name} a bien été mis à jour`;
     res.json(success(message, pokemonUpdate));
 })
 
-    app.listen(port, () => console.log(`Notre application Node est démarrée sur http://localhost:${port}`));
+app.patch('/api/pokemons/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const pokemonUpdated = {id: id, ...req.body}
+    pokemons[id-1] = pokemonUpdated;
+    const message = `Le pokémon ${pokemonUpdated.name} a bien été mis à jour seul`;
+    res.json(success(message, pokemonUpdated));
+})
+
+app.delete('/api/pokemons/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const pokemonDeleted = pokemons.find(pokemon => pokemon.id === id);
+    pokemons = pokemons.filter(pokemon => pokemon.id !== id);
+    const message = `Le pokémon ${pokemonDeleted.name} a bien été supprimé`;
+    res.json(success(message, pokemonDeleted));
+})
+
+app.listen(port, () => console.log(`Notre application Node est démarrée sur http://localhost:${port}`));
